@@ -3,9 +3,6 @@ package hermosa.bloomfilters;
 
 import sun.misc.Hashing;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import static java.lang.Math.*;
@@ -47,7 +44,7 @@ public class CountingBloomFilter<T>{
      * @return minimum number of times the object might have been inserted into the bloom filter
      */
     public int put(T obj) {
-        List<Integer> cells = getCells(obj);
+        int[] cells = getCells(obj);
         return setCells(cells);
     }
 
@@ -58,37 +55,39 @@ public class CountingBloomFilter<T>{
      * @return minimum number of times the object might have been inserted into the bloom filter
      */
     public int likelyToConain(T obj) {
-        List<Integer> cells = getCells(obj);
+        int[] cells = getCells(obj);
         return minimumInserstionsIn(cells);
     }
 
-    private int minimumInserstionsIn(List<Integer> cells) {
+    private int minimumInserstionsIn(int[] cells) {
         int minCellVal = Integer.MAX_VALUE;
-        for (int cellNo: cells){
-            if (bloomArray[cellNo] < minCellVal)
-                minCellVal = bloomArray[cellNo];
+        for (int cellNo=0; cellNo < cells.length; cellNo++){
+            int bloomCell = cells[cellNo];
+            if (bloomArray[bloomCell] < minCellVal)
+                minCellVal = bloomArray[bloomCell];
         }
         return minCellVal;
     }
 
-    private int setCells(List<Integer> cells) {
+    private int setCells(int[] cells) {
         int minCellVal = Integer.MAX_VALUE;
-        for (int cellNo: cells){
-            if (bloomArray[cellNo] < minCellVal)
-                minCellVal = bloomArray[cellNo];
+        for (int cellNo=0; cellNo < cells.length; cellNo++){
+            int bloomCell = cells[cellNo];
+            if (bloomArray[bloomCell] < minCellVal)
+                minCellVal = bloomArray[bloomCell];
 
-            if (bloomArray[cellNo] < 127) {
-                bloomArray[cellNo]++;
+            if (bloomArray[bloomCell] < 127) {
+                bloomArray[bloomCell]++;
             }
 
         }
         return minCellVal;
     }
 
-    private List<Integer> getCells(T obj) {
-        List<Integer> cells = new ArrayList<Integer>();
+    private int[] getCells(T obj) {
+        int[] cells = new int[numOfHashFuncs];
         for (int cellNo=0; cellNo < numOfHashFuncs; cellNo++)
-            cells.add(getCell(obj,hashFunctions[cellNo]));
+            cells[cellNo] = getCell(obj,hashFunctions[cellNo]);
         return cells;
     }
 

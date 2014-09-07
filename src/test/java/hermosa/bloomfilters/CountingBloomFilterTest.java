@@ -36,7 +36,7 @@ public class CountingBloomFilterTest {
             for (int perfIter=0;perfIter<perfIterations; perfIter++)
                 countingBloomFilter.put("something else");
         long end = System.nanoTime();
-        long insertionsPerSec = (perfIterations)/((end-begin)/(1000*1000*1000));
+        double insertionsPerSec = (perfIterations)/((double)(end-begin)/(1000*1000*1000));
         System.out.println("Througput of "+ insertionsPerSec + " puts per second");
     }
 
@@ -55,14 +55,14 @@ public class CountingBloomFilterTest {
         for (int perfIter=0;perfIter<perfIterations; perfIter++)
             countingBloomFilter.likelyToConain("something else");
         long end = System.nanoTime();
-        long nonEmptyChecksPerSec = (perfIterations)/((end-begin)/(1000*1000*1000));
+        double nonEmptyChecksPerSec = (perfIterations)/((double)(end-begin)/(1000*1000*1000));
         System.out.println("Througput of "+ nonEmptyChecksPerSec + " non empty checks per second");
 
         begin = System.nanoTime();
         for (int perfIter=0;perfIter<perfIterations; perfIter++)
             countingBloomFilter.likelyToConain("something that hasn't been inserted");
         end = System.nanoTime();
-        long emptyChecksPerSec = (perfIterations)/((end-begin)/(1000*1000*1000));
+        double emptyChecksPerSec = (perfIterations)/((double)(end-begin)/(1000*1000*1000));
         System.out.println("Througput of "+ emptyChecksPerSec + " empty checks per second");
     }
 }
